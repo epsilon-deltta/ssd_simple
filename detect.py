@@ -33,7 +33,7 @@ normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])
 
 
-def detect(original_image,min_score=0.2, max_overlap=0.5, top_k=200, suppress=None):
+def detect(model,original_image,min_score=0.2, max_overlap=0.5, top_k=200, suppress=None):
     """
     Detect objects in an image with a trained SSD300, and visualize the results.
 
