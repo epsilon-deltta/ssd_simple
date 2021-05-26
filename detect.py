@@ -2,22 +2,22 @@ from torchvision import transforms
 from utils import *
 from PIL import Image, ImageDraw, ImageFont
 
+# from model import SSD300
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load model checkpoint #
-checkpoint = ''
-
-import subprocess as sbp
+download_path = 'https://drive.google.com/file/d/1bvJfF6r_zYl2xZEpYXxgb7jLQHFZ01Qe/view'
 FILENAME  = 'voc_pretrined.pth.tar'
 FILENAME2 = 'checkpoint_ssd300.pth.tar'
-checkpoint = FILENAME
-FILEID = '1bvJfF6r_zYl2xZEpYXxgb7jLQHFZ01Qe'
 
 import os
-if  not os.path.exists(FILENAME):
-    sbp.check_output(f'''
-                     wget --load-cookies ~/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies ~/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id={FILEID}' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id={FILEID}" -O {FILENAME} && rm -rf ~/cookies.txt
-                     ''' ,shell=True)    
+if  os.path.exists(FILENAME) :
+    checkpoint = FILENAME
+elif os.path.exists(FILENAME2) :
+    checkpoint = FILENAME2
+else :
+    print(f" You dont have any ssd pretrained model file download in here{download_path}")
+    
 
 checkpoint = torch.load(checkpoint)
 start_epoch = checkpoint['epoch'] + 1
@@ -33,7 +33,7 @@ normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])
 
 
-def detect(original_image, min_score, max_overlap, top_k, suppress=None):
+def detect(original_image,min_score=0.2, max_overlap=0.5, top_k=200, suppress=None):
     """
     Detect objects in an image with a trained SSD300, and visualize the results.
 
