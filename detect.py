@@ -4,8 +4,21 @@ from PIL import Image, ImageDraw, ImageFont
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Load model checkpoint
-checkpoint = 'checkpoint_ssd300.pth.tar'
+# Load model checkpoint #
+checkpoint = ''
+
+import subprocess as sbp
+FILENAME  = 'voc_pretrined.pth.tar'
+FILENAME2 = 'checkpoint_ssd300.pth.tar'
+checkpoint = FILENAME
+FILEID = '1bvJfF6r_zYl2xZEpYXxgb7jLQHFZ01Qe'
+
+import os
+if  not os.path.exists(FILENAME):
+    sbp.check_output(f'''
+                     wget --load-cookies ~/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies ~/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id={FILEID}' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id={FILEID}" -O {FILENAME} && rm -rf ~/cookies.txt
+                     ''' ,shell=True)    
+
 checkpoint = torch.load(checkpoint)
 start_epoch = checkpoint['epoch'] + 1
 print('\nLoaded checkpoint from epoch %d.\n' % start_epoch)
