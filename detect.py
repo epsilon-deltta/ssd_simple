@@ -16,8 +16,9 @@ if  os.path.exists(FILENAME) :
 elif os.path.exists(FILENAME2) :
     checkpoint = FILENAME2
 else :
-    print(f" You dont have any ssd pretrained model file download in here{download_path}")
-    
+    warning = f" You dont have any ssd pretrained model file download in here \n {download_path}"
+    print(warning)
+    raise Exception(warning)
 
 checkpoint = torch.load(checkpoint)
 start_epoch = checkpoint['epoch'] + 1
